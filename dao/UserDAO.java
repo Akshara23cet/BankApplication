@@ -69,5 +69,19 @@ public class UserDAO {
             e.printStackTrace();
         }
     }
+        public void updatePin(int accountNo, int newPin) {
+    try {
+        Connection con = DBConnection.getConnection();
+        String sql = "UPDATE users SET pin=? WHERE account_no=?";
+        PreparedStatement ps = con.prepareStatement(sql);
+
+        ps.setInt(1, newPin);
+        ps.setInt(2, accountNo);
+
+        ps.executeUpdate();
+    } catch (Exception e) {
+        e.printStackTrace();
     }
 }
+    }
+
