@@ -1,4 +1,4 @@
-package model;
+package com.bank.model;
 
 public class User {
     private int accountNo;
@@ -6,12 +6,13 @@ public class User {
     private int pin;
     private double balance;
 
-    public  User(int accountNo,String name,int pin,double balance){
-        this.accountNo=accountNo;
-        this.name=name;
-        this.pin=pin;
-        this.balance=balance;
-        
+    public User() {}
+
+    public User(int accountNo, String name, int pin, double balance) {
+        this.accountNo = accountNo;
+        this.name = name;
+        this.pin = pin;
+        this.balance = balance;
     }
 
     public int getAccountNo() {
@@ -45,5 +46,4 @@ public class User {
     public void setBalance(double balance) {
         this.balance = balance;
     }
-    
 }

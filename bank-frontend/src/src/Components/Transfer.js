@@ -4,13 +4,12 @@ import { useNavigate } from "react-router-dom";
 function Transfer() {
   const [toAcc, setToAcc] = useState("");
   const [amount, setAmount] = useState("");
-  const [pin, setPin] = useState("");
   const [loading, setLoading] = useState(false);
+
   const navigate = useNavigate();
 
-  // ✅ Get token from localStorage
-  const token = localStorage.getItem("token");
-  const accNo = localStorage.getItem("accNo");
+  const accNo = sessionStorage.getItem("accNo");
+  const pin = sessionStorage.getItem("pin");
 
   const transfer = async () => {
     if (!toAcc || isNaN(toAcc) || parseInt(toAcc) <= 0) {
@@ -25,30 +24,18 @@ function Transfer() {
       alert("Please enter a valid positive transfer amount");
       return;
     }
-    if (!pin) {
-      alert("Please enter your PIN to confirm");
-      return;
-    }
 
     setLoading(true);
     try {
-      const res = await fetch("http://localhost:8080/bank/transfer", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          // ✅ Send JWT token in header
-          "Authorization": `Bearer ${token}`
-        },
-        body: JSON.stringify({ toAcc, pin, amount }),
-      });
+      const res = await fetch(
+        `http://localhost:8080/bank/transfer?fromAcc=${accNo}&pin=${pin}&toAcc=${toAcc}&amount=${amount}`
+      );
 
       const data = await res.text();
       alert(data);
-
       if (res.ok) {
         setToAcc("");
         setAmount("");
-        setPin("");
       }
     } catch (err) {
       console.error(err);
@@ -64,6 +51,7 @@ function Transfer() {
       <p style={{ color: "var(--text-muted)", marginBottom: "30px" }}>
         Move funds to another Apex account instantly.
       </p>
+
       <div className="card">
         <div style={{ textAlign: "left" }}>
           <label>Destination Account Number</label>
@@ -82,24 +70,14 @@ function Transfer() {
             onChange={(e) => setAmount(e.target.value)}
             disabled={loading}
           />
-
-          <label>Confirm PIN</label>
-          <input
-            type="password"
-            placeholder="Enter your PIN"
-            value={pin}
-            onChange={(e) => setPin(e.target.value)}
-            disabled={loading}
-            maxLength={4}
-          />
         </div>
 
         <button className="action-btn" onClick={transfer} disabled={loading}>
           {loading ? "Processing..." : "⚡ Send Money"}
         </button>
 
-        <button
-          className="action-btn secondary-btn"
+        <button 
+          className="action-btn secondary-btn" 
           onClick={() => navigate("/dashboard")}
           disabled={loading}
         >

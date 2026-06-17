@@ -12,26 +12,19 @@ function Login() {
       alert("Please enter both Account Number and PIN");
       return;
     }
-
+    
     setLoading(true);
     try {
-      const res = await fetch("http://localhost:8080/bank/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        // ✅ Send as JSON body
-        body: JSON.stringify({ accNo: acc, pin: p }),
-      });
-
+      const res = await fetch(
+        `http://localhost:8080/bank/login?accNo=${acc}&pin=${p}`
+      );
+      
       if (res.ok) {
         const data = await res.json();
-
-        if (data && data.token) {
-          // ✅ Save JWT token + user info to localStorage
-          localStorage.setItem("token", data.token);
-          localStorage.setItem("accNo", data.accNo);
-          localStorage.setItem("name", data.name);
-          localStorage.setItem("balance", data.balance);
-
+        if (data) {
+          sessionStorage.setItem("accNo", data.accountNo);
+          sessionStorage.setItem("pin", p);
+          sessionStorage.setItem("name", data.name);
           navigate("/dashboard");
         } else {
           alert("Invalid Login. Please check your details.");
@@ -76,7 +69,7 @@ function Login() {
         <button className="action-btn" onClick={login} disabled={loading}>
           {loading ? "Verifying..." : "🔐 Secure Login"}
         </button>
-
+        
         <button
           className="action-btn secondary-btn"
           onClick={() => navigate("/create")}

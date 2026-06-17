@@ -5,23 +5,16 @@ function Transactions() {
   const [transactions, setTransactions] = useState([]);
   const [filter, setFilter] = useState("ALL");
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
 
-  // ✅ Get token from localStorage
-  const token = localStorage.getItem("token");
+  const navigate = useNavigate();
+  const accNo = sessionStorage.getItem("accNo");
 
   const loadTransactions = async () => {
     setLoading(true);
     try {
-      const res = await fetch("http://localhost:8080/bank/transactions", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          // ✅ Send JWT token in header
-          "Authorization": `Bearer ${token}`
-        }
-      });
-
+      const res = await fetch(
+        `http://localhost:8080/bank/transactions?accNo=${accNo}`
+      );
       if (res.ok) {
         const data = await res.json();
         setTransactions(data);
@@ -34,14 +27,14 @@ function Transactions() {
     }
   };
 
+  // Auto-load transactions on component mount
   useEffect(() => {
-    if (token) {
+    if (accNo) {
       loadTransactions();
-    } else {
-      navigate("/");
     }
-  }, []);
+  }, [accNo]);
 
+  // Format Date String nicely
   const formatDate = (dateStr) => {
     if (!dateStr) return "N/A";
     const date = new Date(dateStr);
@@ -54,20 +47,28 @@ function Transactions() {
     });
   };
 
+  // Get badge CSS class for transaction type
   const getBadgeClass = (type) => {
     switch (type) {
-      case "DEPOSIT": return "badge badge-deposit";
-      case "WITHDRAW": return "badge badge-withdraw";
-      case "TRANSFER_IN": return "badge badge-transfer-in";
-      case "TRANSFER_OUT": return "badge badge-transfer-out";
-      default: return "badge";
+      case "DEPOSIT":
+        return "badge badge-deposit";
+      case "WITHDRAW":
+        return "badge badge-withdraw";
+      case "TRANSFER_IN":
+        return "badge badge-transfer-in";
+      case "TRANSFER_OUT":
+        return "badge badge-transfer-out";
+      default:
+        return "badge";
     }
   };
 
+  // Format type string for presentation
   const formatType = (type) => {
     return type.replace("_", " ");
   };
 
+  // Filter transaction records
   const filteredTransactions = transactions.filter((t) => {
     if (filter === "ALL") return true;
     if (filter === "TRANSFERS") return t.type.startsWith("TRANSFER");
@@ -83,11 +84,32 @@ function Transactions() {
 
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", flexWrap: "wrap", gap: "15px" }}>
         <div className="tab-container" style={{ margin: 0 }}>
-          <button className={`tab-btn ${filter === "ALL" ? "active" : ""}`} onClick={() => setFilter("ALL")}>All</button>
-          <button className={`tab-btn ${filter === "DEPOSIT" ? "active" : ""}`} onClick={() => setFilter("DEPOSIT")}>Deposits</button>
-          <button className={`tab-btn ${filter === "WITHDRAW" ? "active" : ""}`} onClick={() => setFilter("WITHDRAW")}>Withdrawals</button>
-          <button className={`tab-btn ${filter === "TRANSFERS" ? "active" : ""}`} onClick={() => setFilter("TRANSFERS")}>Transfers</button>
+          <button 
+            className={`tab-btn ${filter === "ALL" ? "active" : ""}`} 
+            onClick={() => setFilter("ALL")}
+          >
+            All
+          </button>
+          <button 
+            className={`tab-btn ${filter === "DEPOSIT" ? "active" : ""}`} 
+            onClick={() => setFilter("DEPOSIT")}
+          >
+            Deposits
+          </button>
+          <button 
+            className={`tab-btn ${filter === "WITHDRAW" ? "active" : ""}`} 
+            onClick={() => setFilter("WITHDRAW")}
+          >
+            Withdrawals
+          </button>
+          <button 
+            className={`tab-btn ${filter === "TRANSFERS" ? "active" : ""}`} 
+            onClick={() => setFilter("TRANSFERS")}
+          >
+            Transfers
+          </button>
         </div>
+
         <button className="action-btn" onClick={loadTransactions} disabled={loading} style={{ width: "auto" }}>
           🔄 {loading ? "Loading..." : "Refresh Logs"}
         </button>
@@ -118,23 +140,27 @@ function Transactions() {
                       {formatType(t.type)}
                     </span>
                   </td>
-                  <td style={{
+                  <td style={{ 
                     fontWeight: "bold",
                     color: t.type === "DEPOSIT" || t.type === "TRANSFER_IN" ? "var(--success)" : "var(--danger)"
                   }}>
                     {t.type === "DEPOSIT" || t.type === "TRANSFER_IN" ? "+" : "-"}${t.amount.toFixed(2)}
                   </td>
-                  <td style={{ fontWeight: "600" }}>${t.balance.toFixed(2)}</td>
-                  <td style={{ color: "var(--text-muted)" }}>{formatDate(t.txnTime)}</td>
+                  <td style={{ fontWeight: "600" }}>
+                    ${t.balance.toFixed(2)}
+                  </td>
+                  <td style={{ color: "var(--text-muted)" }}>
+                    {formatDate(t.txn_time)}
+                  </td>
                 </tr>
               ))
             )}
           </tbody>
         </table>
       </div>
-
-      <button
-        className="action-btn secondary-btn"
+      
+      <button 
+        className="action-btn secondary-btn" 
         onClick={() => navigate("/dashboard")}
         style={{ marginTop: "25px", width: "auto" }}
       >

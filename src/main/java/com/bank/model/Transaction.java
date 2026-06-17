@@ -1,6 +1,7 @@
-package model;
+package com.bank.model;
 
 import java.sql.Timestamp;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Transaction {
 
@@ -9,7 +10,11 @@ public class Transaction {
     private String type;
     private double amount;
     private double balance;
+    
+    @JsonProperty("txn_time")
     private Timestamp txnTime;
+
+    public Transaction() {}
 
     public Transaction(int txnId, int accountNo, String type,
                        double amount, double balance, Timestamp txnTime) {
@@ -43,5 +48,29 @@ public class Transaction {
 
     public Timestamp getTxnTime() {
         return txnTime;
+    }
+
+    public void setTxnId(int txnId) {
+        this.txnId = txnId;
+    }
+
+    public void setAccountNo(int accountNo) {
+        this.accountNo = accountNo;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public void setAmount(double amount) {
+        this.amount = amount;
+    }
+
+    public void setBalance(double balance) {
+        this.balance = balance;
+    }
+
+    public void setTxnTime(Timestamp txnTime) {
+        this.txnTime = txnTime;
     }
 }

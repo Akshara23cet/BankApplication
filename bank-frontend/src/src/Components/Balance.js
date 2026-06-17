@@ -4,23 +4,18 @@ import { useNavigate } from "react-router-dom";
 function Balance() {
   const [balance, setBalance] = useState("Loading...");
   const [loading, setLoading] = useState(false);
+
   const navigate = useNavigate();
 
-  // ✅ Get token from localStorage
-  const token = localStorage.getItem("token");
+  const accNo = sessionStorage.getItem("accNo");
+  const pin = sessionStorage.getItem("pin");
 
   const getBalance = async () => {
     setLoading(true);
     try {
-      const res = await fetch("http://localhost:8080/bank/balance", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          // ✅ Send JWT token in header
-          "Authorization": `Bearer ${token}`
-        }
-      });
-
+      const res = await fetch(
+        `http://localhost:8080/bank/balance?accNo=${accNo}&pin=${pin}`
+      );
       if (res.ok) {
         const data = await res.text();
         setBalance(data);
@@ -36,12 +31,10 @@ function Balance() {
   };
 
   useEffect(() => {
-    if (token) {
+    if (accNo && pin) {
       getBalance();
-    } else {
-      navigate("/");
     }
-  }, []);
+  }, [accNo, pin]);
 
   return (
     <div className="content">
@@ -49,25 +42,29 @@ function Balance() {
       <p style={{ color: "var(--text-muted)", marginBottom: "30px" }}>
         Review your real-time available funds securely.
       </p>
+
       <div className="card">
         <h3 style={{ color: "var(--text-muted)", fontSize: "0.95rem", textTransform: "uppercase", letterSpacing: "1px", marginBottom: "10px" }}>
           Account Balance
         </h3>
+        
         <div style={{ margin: "20px 0" }}>
           <h1 style={{ fontSize: "2.5rem", fontWeight: "800", color: "var(--text-main)" }}>
             {balance}
           </h1>
         </div>
-        <button
-          className="action-btn"
-          onClick={getBalance}
+
+        <button 
+          className="action-btn" 
+          onClick={getBalance} 
           disabled={loading}
           style={{ marginBottom: "15px" }}
         >
           🔄 {loading ? "Refreshing..." : "Refresh Balance"}
         </button>
-        <button
-          className="action-btn secondary-btn"
+
+        <button 
+          className="action-btn secondary-btn" 
           onClick={() => navigate("/dashboard")}
           disabled={loading}
         >

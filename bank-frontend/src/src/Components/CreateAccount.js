@@ -5,6 +5,7 @@ function CreateAccount() {
   const [name, setName] = useState("");
   const [pin, setPin] = useState("");
   const [loading, setLoading] = useState(false);
+
   const navigate = useNavigate();
 
   const createAccount = async () => {
@@ -19,22 +20,18 @@ function CreateAccount() {
 
     setLoading(true);
     try {
-      const res = await fetch("http://localhost:8080/bank/create", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        // ✅ Send as JSON body instead of query params
-        body: JSON.stringify({ name, pin }),
-      });
+      const res = await fetch(
+        `http://localhost:8080/bank/create?name=${encodeURIComponent(name)}&pin=${pin}`
+      );
 
       const data = await res.text();
       alert(data);
-
       if (res.ok) {
         navigate("/");
       }
     } catch (err) {
       console.error(err);
-      alert("Could not connect to backend. Make sure Spring Boot is running.");
+      alert("Could not connect to backend server. Make sure Spring Boot is running.");
     } finally {
       setLoading(false);
     }
@@ -44,12 +41,12 @@ function CreateAccount() {
     <div className="login-container">
       <div className="login-card">
         <h2>🆕 Create Account</h2>
-        <p>Register as a new customer</p>
+        <p>Register as a new customer at Apex Bank</p>
 
         <div style={{ textAlign: "left" }}>
           <label>Full Name</label>
           <input
-            placeholder="e.g., John Doe"
+            placeholder="e.g., Akshat Sharma"
             value={name}
             onChange={(e) => setName(e.target.value)}
             disabled={loading}

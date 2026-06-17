@@ -1,70 +1,60 @@
-# Getting Started with Create React App
-
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
-
-## Available Scripts
-
-In the project directory, you can run:
-
-### `npm start`
-
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
-
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+# Apex Bank | Full-Stack Online Banking Portal
+A premium, secure online banking web application built with **Spring Boot (Java)**, **React (JavaScript)**, and **MySQL**.
+This project has been upgraded from a legacy console application into a modern, resume-ready full-stack software project featuring a responsive glassmorphic dashboard interface, secure session management, and robust transactional business logic.
+---
+## 🚀 Key Features
+*   **🔒 Secure Session Authentication**: Login securely using your auto-generated Account Number and 4-digit PIN. Sessions are managed securely using `sessionStorage`.
+*   **💳 Dynamic Visual Debit Card**: A styled mock debit card component that displays the account holder's name, masked account number, and real-time balance.
+*   **💵 Deposit & Withdraw Funds**: Instant simulation of bank account deposits and cash-out withdrawals with input validation.
+*   **💸 Real-Time Money Transfer**: Send funds securely to any destination account. The system validates receiver availability, verifies sufficient balances, and performs transactions.
+*   **📄 Transaction Logs & Filtering**: View complete transactional history with filters for Deposits, Withdrawals, and Transfers, alongside color-coded transaction badges.
+*   **🛡️ Authentication Guards**: Route guards automatically protect private dashboard views, redirecting unauthenticated users to the portal gateway.
+---
+## 🧱 Architecture & Project Structure
+The project follows a clean, decoupled **Client-Server Architecture**:
+### ☕ Backend (Spring Boot REST API)
+Exposes REST endpoints on port `8080` and connects to MySQL via raw JDBC to demonstrate low-level database operations:
+*   `src/main/java/com/bank/model` — Data classes (`User`, `Transaction`).
+*   `src/main/java/com/bank/dao` — Database access objects executing SQL queries.
+*   `src/main/java/com/bank/service` — Layer containing transaction business logic.
+*   `src/main/java/com/bank/controller` — REST controllers managing HTTP mappings and CORS.
+*   `schema.sql` — MySQL database configuration and table structures.
+### ⚛️ Frontend (React SPA)
+A modern client interface built using React and styled with modular, premium vanilla CSS layouts:
+*   `bank-frontend/src/Components` — Pages (`Dashboard`, `Deposit`, `Withdraw`, `Transfer`, `Transactions`, `Balance`) and layout structures (`SidebarLayout`).
+*   `bank-frontend/src/styles.css` — Custom glassmorphism, responsive grids, and neon CSS tokens.
+---
+## 🛠️ Tech Stack
+*   **Backend**: Java 17+, Spring Boot 3.2.5, JDBC, Maven
+*   **Frontend**: React 19, React Router v7, JavaScript, HTML5, Vanilla CSS
+*   **Database**: MySQL Server 8.0+
+---
+## ⚙️ How to Set Up and Run
+### 1. Database Setup
+1. Open your MySQL client (e.g., MySQL Workbench or Command Line).
+2. Execute the queries inside the [schema.sql](schema.sql) file to create the `bankdb` database and the `users` and `transactions` tables.
+3. Make sure the database credentials in `com/bank/utils/DBConnection.java` match your local MySQL configuration:
+    ```java
+    DriverManager.getConnection("jdbc:mysql://localhost:3306/bankdb", "username", "password");
+    ```
+### 2. Run the Backend API
+1. Navigate to the root directory containing `pom.xml`.
+2. Run the Spring Boot application using Maven:
+    ```bash
+    mvn spring-boot:run
+    ```
+    The server will start on [http://localhost:8080](http://localhost:8080).
+### 3. Run the React Frontend
+1. Navigate to the `bank-frontend` directory:
+    ```bash
+    cd bank-frontend
+    ```
+2. Install the necessary node packages:
+    ```bash
+    npm install
+    ```
+3. Start the React development server:
+    ```bash
+    npm start
+    ```
+    The app will open automatically in your browser at [http://localhost:3000](http://localhost:3000).

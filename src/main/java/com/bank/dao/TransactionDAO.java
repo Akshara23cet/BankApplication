@@ -1,4 +1,4 @@
-package dao;
+package com.bank.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -6,9 +6,11 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-import model.Transaction;
-import utils.DBConnection;
+import com.bank.model.Transaction;
+import com.bank.utils.DBConnection;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class TransactionDAO {
 
     // Insert a new transaction record
@@ -32,7 +34,6 @@ public class TransactionDAO {
 
     // Fetch transaction history for an account
     public List<Transaction> getTransactionsByAccount(int accountNo) {
-
         List<Transaction> list = new ArrayList<>();
 
         try {
@@ -45,23 +46,19 @@ public class TransactionDAO {
 
             while (rs.next()) {
                 Transaction txn = new Transaction(
-                    rs.getInt("txn_id"),
-                    rs.getInt("account_no"),
-                    rs.getString("type"),
-                    rs.getDouble("amount"),
-                    rs.getDouble("balance"),
-                    rs.getTimestamp("txn_time")
+                        rs.getInt("txn_id"),
+                        rs.getInt("account_no"),
+                        rs.getString("type"),
+                        rs.getDouble("amount"),
+                        rs.getDouble("balance"),
+                        rs.getTimestamp("txn_time")
                 );
                 list.add(txn);
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         return list;
     }
-
-
-
 }
