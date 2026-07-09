@@ -6,7 +6,9 @@ import com.bank.dao.TransactionDAO;
 import com.bank.model.User;
 import com.bank.model.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class BankService {
@@ -17,16 +19,20 @@ public class BankService {
     @Autowired
     private TransactionDAO transactionDAO;
 
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
+
     // ---------------- CREATE ACCOUNT ----------------
-    public String createAccount(String name, int pin) {
-        if (pin <= 0) {
-            return "Invalid PIN. Must be greater than 0.";
+    public String createAccount(String name, String pin) {
+        if (pin == null || pin.trim().isEmpty() || !pin.matches("\\d+")) {
+            return "Invalid PIN. Must be a numeric value.";
         }
         if (name == null || name.trim().isEmpty()) {
             return "Invalid name. Name cannot be empty.";
         }
 
-        User user = new User(0, name, pin, 0.0);
+        String hashedPin = passwordEncoder.encode(pin);
+        User user = new User(0, name, hashedPin, 0.0);
         int accNo = userDAO.createUser(user);
 
         if (accNo != -1) {
@@ -37,14 +43,18 @@ public class BankService {
     }
 
     // ---------------- LOGIN ----------------
-    public User login(int accNo, int pin) {
-        return userDAO.getUserByAccountAndPin(accNo, pin);
+    public User login(int accNo, String pin) {
+        User user = userDAO.getUserByAccount(accNo);
+        if (user != null && passwordEncoder.matches(pin, user.getPin())) {
+            return user;
+        }
+        return null;
     }
 
     // ---------------- DEPOSIT ----------------
-    public String deposit(int accNo, int pin, double amount) {
-        User user = userDAO.getUserByAccountAndPin(accNo, pin);
-        if (user == null) {
+    public synchronized String deposit(int accNo, String pin, double amount) {
+        User user = userDAO.getUserByAccount(accNo);
+        if (user == null || !passwordEncoder.matches(pin, user.getPin())) {
             return "Invalid account number or PIN";
         }
 
@@ -66,9 +76,9 @@ public class BankService {
     }
 
     // ---------------- WITHDRAW ----------------
-    public String withdraw(int accNo, int pin, double amount) {
-        User user = userDAO.getUserByAccountAndPin(accNo, pin);
-        if (user == null) {
+    public synchronized String withdraw(int accNo, String pin, double amount) {
+        User user = userDAO.getUserByAccount(accNo);
+        if (user == null || !passwordEncoder.matches(pin, user.getPin())) {
             return "Invalid account number or PIN";
         }
 
@@ -94,7 +104,8 @@ public class BankService {
     }
 
     // ---------------- TRANSFER ----------------
-    public String transfer(int fromAcc, int pin, int toAcc, double amount) {
+    @Transactional
+    public synchronized String transfer(int fromAcc, String pin, int toAcc, double amount) {
         if (amount <= 0) {
             return "Invalid transfer amount";
         }
@@ -102,8 +113,8 @@ public class BankService {
             return "Cannot transfer to the same account";
         }
 
-        User sender = userDAO.getUserByAccountAndPin(fromAcc, pin);
-        if (sender == null) {
+        User sender = userDAO.getUserByAccount(fromAcc);
+        if (sender == null || !passwordEncoder.matches(pin, sender.getPin())) {
             return "Invalid account number or PIN";
         }
 
@@ -134,16 +145,20 @@ public class BankService {
     }
 
     // ---------------- CHANGE PIN ----------------
-    public String changePin(int accNo, int oldPin, int newPin) {
-        User user = userDAO.getUserByAccountAndPin(accNo, oldPin);
-        if (user == null) {
+    public String changePin(int accNo, String oldPin, String newPin) {
+        User user = userDAO.getUserByAccount(accNo);
+        if (user == null || !passwordEncoder.matches(oldPin, user.getPin())) {
             return "Invalid account number or PIN";
         }
-        if (newPin <= 0 || newPin == oldPin) {
+        if (newPin == null || newPin.trim().isEmpty() || !newPin.matches("\\d+")) {
             return "Invalid new PIN";
         }
+        if (oldPin.equals(newPin)) {
+            return "New PIN must be different from the old PIN";
+        }
 
-        userDAO.updatePin(user.getAccountNo(), newPin);
+        String hashedNewPin = passwordEncoder.encode(newPin);
+        userDAO.updatePin(user.getAccountNo(), hashedNewPin);
         return "PIN changed successfully!";
     }
     // ---------------- GET BALANCE ----------------
@@ -155,3 +170,19 @@ public class BankService {
         return "Current Balance: " + user.getBalance();
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

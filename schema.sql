@@ -8,7 +8,7 @@ USE bankdb;
 CREATE TABLE IF NOT EXISTS users (
     account_no INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
-    pin INT NOT NULL,
+    pin VARCHAR(255) NOT NULL,
     balance DOUBLE DEFAULT 0.0
 );
 

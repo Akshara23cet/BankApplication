@@ -3,12 +3,12 @@ package com.bank.model;
 public class User {
     private int accountNo;
     private String name;
-    private int pin;
+    private String pin;
     private double balance;
 
     public User() {}
 
-    public User(int accountNo, String name, int pin, double balance) {
+    public User(int accountNo, String name, String pin, double balance) {
         this.accountNo = accountNo;
         this.name = name;
         this.pin = pin;
@@ -23,7 +23,7 @@ public class User {
         return name;
     }
 
-    public int getPin() {
+    public String getPin() {
         return pin;
     }
 
@@ -39,7 +39,7 @@ public class User {
         this.name = name;
     }
 
-    public void setPin(int pin) {
+    public void setPin(String pin) {
         this.pin = pin;
     }
 
@@ -47,3 +47,4 @@ public class User {
         this.balance = balance;
     }
 }
+

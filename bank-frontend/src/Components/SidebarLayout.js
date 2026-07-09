@@ -5,12 +5,10 @@ function SidebarLayout() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // ✅ Get token from localStorage instead of sessionStorage
   const token = localStorage.getItem("token");
   const accNo = localStorage.getItem("accNo");
   const name = localStorage.getItem("name");
 
-  // ✅ Redirect to login if no token
   useEffect(() => {
     if (!token) {
       navigate("/");
@@ -20,7 +18,6 @@ function SidebarLayout() {
   if (!token) return null;
 
   const handleLogout = () => {
-    // ✅ Clear localStorage on logout
     localStorage.clear();
     navigate("/");
   };
@@ -30,7 +27,6 @@ function SidebarLayout() {
       <div className="sidebar">
         <h3>🏦 APEX BANK</h3>
 
-        {/* ✅ Show user info in sidebar */}
         <div style={{
           padding: "10px",
           marginBottom: "15px",
@@ -76,6 +72,14 @@ function SidebarLayout() {
             onClick={() => navigate("/balance")}
           >
             💰 Check Balance
+          </button>
+
+          {/* ✅ NEW — Change PIN button */}
+          <button
+            className={location.pathname === "/change-pin" ? "active" : ""}
+            onClick={() => navigate("/change-pin")}
+          >
+            🔑 Change PIN
           </button>
         </div>
 

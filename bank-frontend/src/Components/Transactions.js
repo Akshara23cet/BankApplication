@@ -125,8 +125,7 @@ function Transactions() {
                     {t.type === "DEPOSIT" || t.type === "TRANSFER_IN" ? "+" : "-"}${t.amount.toFixed(2)}
                   </td>
                   <td style={{ fontWeight: "600" }}>${t.balance.toFixed(2)}</td>
-                  <td style={{ color: "var(--text-muted)" }}>{formatDate(t.txnTime)}</td>
-                </tr>
+                   <td style={{ color: "var(--text-muted)" }}>{formatDate(t.txn_time)}</td>                </tr>
               ))
             )}
           </tbody>

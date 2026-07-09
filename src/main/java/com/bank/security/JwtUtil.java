@@ -2,16 +2,24 @@ package com.bank.security;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
+import java.util.Base64;
 import java.util.Date;
 
 @Component
 public class JwtUtil {
 
-    private final Key secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+    private final Key secretKey;
     private final long EXPIRATION_TIME = 1000 * 60 * 60; // 1 hour
+
+    // Read secret from application.properties instead of generating a new one every restart
+    public JwtUtil(@Value("${jwt.secret}") String secret) {
+        byte[] keyBytes = Base64.getEncoder().encode(secret.getBytes());
+        this.secretKey = Keys.hmacShaKeyFor(keyBytes);
+    }
 
     // Generate token using accNo
     public String generateToken(int accNo) {

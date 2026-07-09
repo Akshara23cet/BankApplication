@@ -21,7 +21,7 @@ import jakarta.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/bank")
-@CrossOrigin(origins = "*")
+//@CrossOrigin(origins = "*")
 public class BankController {
 
     @Autowired
@@ -40,7 +40,7 @@ public class BankController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Map<String, String> body) {
         int accNo = Integer.parseInt(body.get("accNo"));
-        int pin = Integer.parseInt(body.get("pin"));
+        String pin = body.get("pin");
 
         User user = bankService.login(accNo, pin);
         if (user != null) {
@@ -64,7 +64,7 @@ public class BankController {
     @PostMapping("/create")
     public ResponseEntity<String> createAccount(@RequestBody Map<String, String> body) {
         String name = body.get("name");
-        int pin = Integer.parseInt(body.get("pin"));
+        String pin = body.get("pin");
 
         String result = bankService.createAccount(name, pin);
         if (result.contains("successfully")) {
@@ -79,7 +79,7 @@ public class BankController {
     public ResponseEntity<String> deposit(@RequestBody Map<String, String> body,
                                           HttpServletRequest request) {
         int accNo = (int) request.getAttribute("accNo");
-        int pin = Integer.parseInt(body.get("pin"));
+        String pin = body.get("pin");
         double amount = Double.parseDouble(body.get("amount"));
 
         String result = bankService.deposit(accNo, pin, amount);
@@ -95,7 +95,7 @@ public class BankController {
     public ResponseEntity<String> withdraw(@RequestBody Map<String, String> body,
                                            HttpServletRequest request) {
         int accNo = (int) request.getAttribute("accNo");
-        int pin = Integer.parseInt(body.get("pin"));
+        String pin = body.get("pin");
         double amount = Double.parseDouble(body.get("amount"));
 
         String result = bankService.withdraw(accNo, pin, amount);
@@ -111,7 +111,7 @@ public class BankController {
     public ResponseEntity<String> transfer(@RequestBody Map<String, String> body,
                                            HttpServletRequest request) {
         int fromAcc = (int) request.getAttribute("accNo");
-        int pin = Integer.parseInt(body.get("pin"));
+        String pin = body.get("pin");
         int toAcc = Integer.parseInt(body.get("toAcc"));
         double amount = Double.parseDouble(body.get("amount"));
 
@@ -127,9 +127,6 @@ public class BankController {
     @GetMapping("/balance")
     public ResponseEntity<String> checkBalance(HttpServletRequest request) {
         int accNo = (int) request.getAttribute("accNo");
-        User user = bankService.login(accNo, 0);
-
-        // Get user by accNo directly
         String result = bankService.getBalance(accNo);
         return ResponseEntity.ok(result);
     }
@@ -147,8 +144,8 @@ public class BankController {
     public ResponseEntity<String> changePin(@RequestBody Map<String, String> body,
                                             HttpServletRequest request) {
         int accNo = (int) request.getAttribute("accNo");
-        int oldPin = Integer.parseInt(body.get("oldPin"));
-        int newPin = Integer.parseInt(body.get("newPin"));
+        String oldPin = body.get("oldPin");
+        String newPin = body.get("newPin");
 
         String result = bankService.changePin(accNo, oldPin, newPin);
         if (result.contains("successfully")) {
