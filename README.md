@@ -1,4 +1,4 @@
-# Apex Bank | Full-Stack Online Banking Portal
+# FinVault Bank | Full-Stack Online Banking Portal
 
 A premium, secure online banking web application built with **Spring Boot (Java)**, **React (JavaScript)**, and **MySQL**.
 
