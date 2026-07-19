@@ -51,11 +51,11 @@ function Deposit() {
     <div className="content">
       <h2>💵 Deposit Funds</h2>
       <p style={{ color: "var(--text-muted)", marginBottom: "30px" }}>
-        Add funds directly to your Apex bank account.
+        Add funds directly to your bank account.
       </p>
       <div className="card">
         <div style={{ textAlign: "left" }}>
-          <label>Deposit Amount ($)</label>
+          <label>Deposit Amount (₹)</label>
           <input
             type="number"
             placeholder="Enter amount (e.g., 500)"

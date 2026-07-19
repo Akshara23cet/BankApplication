@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-function Transfer() {
-  const [toAcc, setToAcc] = useState("");
+function Withdraw() {
   const [amount, setAmount] = useState("");
   const [pin, setPin] = useState("");
   const [loading, setLoading] = useState(false);
@@ -10,19 +9,10 @@ function Transfer() {
 
   // ✅ Get token from localStorage
   const token = localStorage.getItem("token");
-  const accNo = localStorage.getItem("accNo");
 
-  const transfer = async () => {
-    if (!toAcc || isNaN(toAcc) || parseInt(toAcc) <= 0) {
-      alert("Please enter a valid Destination Account Number");
-      return;
-    }
-    if (parseInt(toAcc) === parseInt(accNo)) {
-      alert("Cannot transfer money to the same account");
-      return;
-    }
+  const withdraw = async () => {
     if (!amount || isNaN(amount) || parseFloat(amount) <= 0) {
-      alert("Please enter a valid positive transfer amount");
+      alert("Please enter a valid positive withdrawal amount");
       return;
     }
     if (!pin) {
@@ -32,21 +22,20 @@ function Transfer() {
 
     setLoading(true);
     try {
-      const res = await fetch("http://localhost:8080/bank/transfer", {
+      const res = await fetch("http://localhost:8080/bank/withdraw", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           // ✅ Send JWT token in header
           "Authorization": `Bearer ${token}`
         },
-        body: JSON.stringify({ toAcc, pin, amount }),
+        body: JSON.stringify({ pin, amount }),
       });
 
       const data = await res.text();
       alert(data);
 
       if (res.ok) {
-        setToAcc("");
         setAmount("");
         setPin("");
       }
@@ -60,21 +49,13 @@ function Transfer() {
 
   return (
     <div className="content">
-      <h2>💸 Transfer Funds</h2>
+      <h2>💳 Withdraw Funds</h2>
       <p style={{ color: "var(--text-muted)", marginBottom: "30px" }}>
-        Move funds to another Apex account instantly.
+        Withdraw funds from your FinVault account.
       </p>
       <div className="card">
         <div style={{ textAlign: "left" }}>
-          <label>Destination Account Number</label>
-          <input
-            placeholder="e.g., 1002"
-            value={toAcc}
-            onChange={(e) => setToAcc(e.target.value)}
-            disabled={loading}
-          />
-
-          <label>Transfer Amount ($)</label>
+          <label>Withdrawal Amount (₹)</label>
           <input
             type="number"
             placeholder="Enter amount (e.g., 150)"
@@ -94,8 +75,8 @@ function Transfer() {
           />
         </div>
 
-        <button className="action-btn" onClick={transfer} disabled={loading}>
-          {loading ? "Processing..." : "⚡ Send Money"}
+        <button className="action-btn" onClick={withdraw} disabled={loading}>
+          {loading ? "Processing..." : "💳 Withdraw"}
         </button>
 
         <button
@@ -110,4 +91,4 @@ function Transfer() {
   );
 }
 
-export default Transfer;
+export default Withdraw;

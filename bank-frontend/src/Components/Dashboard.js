@@ -35,7 +35,7 @@ function Dashboard() {
         const data = await res.text();
         // Extract just the number from "Current Balance: 500.0"
         const amount = data.replace("Current Balance: ", "");
-        setBalance(`$${parseFloat(amount).toLocaleString(undefined, { minimumFractionDigits: 2 })}`);
+setBalance(`₹${parseFloat(amount).toLocaleString(undefined, { minimumFractionDigits: 2 })}`);
       } else {
         setBalance("Error loading");
       }
@@ -80,7 +80,7 @@ function Dashboard() {
           </div>
 
           <div className="card" style={{ maxWidth: "100%", marginTop: "20px" }}>
-            <h3 style={{ marginBottom: "15px", color: "var(--text-main)" }}>💡 Apex Security Tip</h3>
+            <h3 style={{ marginBottom: "15px", color: "var(--text-main)" }}>💡 Security Tip</h3>
             <p style={{ color: "var(--text-muted)", fontSize: "0.95rem", lineHeight: "1.6" }}>
               Never share your 4-digit security PIN with anyone, including bank staff. 
               Change your PIN regularly using the service menu to ensure your funds remain secure.
@@ -98,7 +98,7 @@ function Dashboard() {
               <strong style={{ color: "var(--accent-blue)" }}>Withdraw:</strong> Securely cash out from your available balance.
             </li>
             <li>
-              <strong style={{ color: "var(--accent-blue)" }}>Transfer:</strong> Move funds to any active Apex account in real-time.
+              <strong style={{ color: "var(--accent-blue)" }}>Transfer:</strong> Move funds to any active  account in real-time.
             </li>
             <li>
               <strong style={{ color: "var(--accent-blue)" }}>Transactions:</strong> Track and filter your complete credit/debit logs.

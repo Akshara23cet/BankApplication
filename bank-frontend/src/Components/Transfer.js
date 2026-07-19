@@ -62,7 +62,7 @@ function Transfer() {
     <div className="content">
       <h2>💸 Transfer Funds</h2>
       <p style={{ color: "var(--text-muted)", marginBottom: "30px" }}>
-        Move funds to another Apex account instantly.
+        Move funds to another account instantly.
       </p>
       <div className="card">
         <div style={{ textAlign: "left" }}>

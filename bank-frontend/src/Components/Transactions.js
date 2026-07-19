@@ -122,9 +122,9 @@ function Transactions() {
                     fontWeight: "bold",
                     color: t.type === "DEPOSIT" || t.type === "TRANSFER_IN" ? "var(--success)" : "var(--danger)"
                   }}>
-                    {t.type === "DEPOSIT" || t.type === "TRANSFER_IN" ? "+" : "-"}${t.amount.toFixed(2)}
+                    {t.type === "DEPOSIT" || t.type === "TRANSFER_IN" ? "+" : "-"}₹{t.amount.toFixed(2)}
                   </td>
-                  <td style={{ fontWeight: "600" }}>${t.balance.toFixed(2)}</td>
+                  <td style={{ fontWeight: "600" }}>₹{t.balance.toFixed(2)}</td>
                    <td style={{ color: "var(--text-muted)" }}>{formatDate(t.txn_time)}</td>                </tr>
               ))
             )}

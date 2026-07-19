@@ -25,7 +25,7 @@ function SidebarLayout() {
   return (
     <div className="container">
       <div className="sidebar">
-        <h3>🏦 APEX BANK</h3>
+        <h3>🏦 FinVault Bank</h3>
 
         <div style={{
           padding: "10px",
